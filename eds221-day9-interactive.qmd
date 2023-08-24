@@ -88,9 +88,138 @@ penguins |>
 Find and return both the mean and standard deviation of all columns starting with "bill", grouped by penguin species, and returning a new name that combines the original column with the function
 
 ```{r}
-penguins |> 
+across_rename_example <- penguins |> 
   group_by(species) |> 
-  summarize(across(starts_with("bill"), list(mean = mean, sd = sd), na.rm = TRUE, .names = "{.col}_{.fn}"))
+  summarize(across(starts_with("bill"), 
+                   list(mean = mean,
+                        sd = sd,
+                        max = max), 
+                   na.rm = TRUE, 
+                   .names = "{.col}_{.fn}"))
+across_rename_example
+```
+
+for all columns with numeric values
+
+```{r}
+across_rename_example_2 <- penguins |> 
+  group_by(species) |> 
+  summarize(across(where(is.numeric), 
+                   list(mean = mean,
+                        sd = sd,
+                        max = max), 
+                   na.rm = TRUE, 
+                   .names = "{.col}_{.fn}"))
+across_rename_example_2
+```
+
+M
+
+```{r}
+penguins_table_bad <- penguins |> 
+  group_by(species, sex) |> 
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
+            sd_mass = sd(body_mass_g, na.rm = TRUE))
+
+penguins_table_bad
+# ugly table in output. "raw tibble", no borders, row numbers still there, etc. 
+```
+
+Let's make a nicer looking table!!
+
+Using kable(), kableExtra
+
+default is alternating striped rows
+
+?kable_styling in console
+
+```{r}
+penguins_table <- penguins |> 
+  group_by(species, sex) |> 
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
+            sd_mass = sd(body_mass_g, na.rm = TRUE)) |> 
+  kable(col.names = c("Species", "Sex", "Mean body mass (g)", "SD body mass (g)")) 
+
+penguins_table
+```
+
+```{r}
+penguins_table_2 <- penguins |> 
+  group_by(species, sex) |> 
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE),
+            sd_mass = sd(body_mass_g, na.rm = TRUE)) |> 
+  kable(col.names = c("Species", "Sex", "Mean body mass (g)", "SD body mass (g)")) |> 
+  kable_styling(full_width = FALSE) # doesn't appear to do much?
+
+penguins_table_2
+```
+
+## Patchwork
+
+```{r}
+chart1 <- penguins |> 
+  ggplot(aes(x = body_mass_g, 
+             y = flipper_length_mm)) +
+  geom_point()
+
+chart1
+```
+
+```{r}
+chart2 <- penguins |> 
+  ggplot(aes(x = bill_length_mm)) +
+  geom_histogram()
+
+chart2
+```
+
+Use patchwork package to combine these!
+
+```{r}
+chart1 + chart2 
+```
+
+```{r}
+(chart1 + chart2 + chart1) / chart2
+```
+
+```{r}
+((chart1 + chart2 + chart1) / (chart2 + chart1)) + chart1
+```
+
+patchwork package allows you to apply the same theme across all charts
+
+cowplot is also cool :)
+
+## How to add alt text and a figure caption
+
+```{r}
+#| fig-cap: Penguin body mass observations by species.
+#| fig-alt: Jitterplot showing the body mass measurements (y-axis, in grams) for three penguin species (Adelie, Chinstrap, and Gentoo on x-axis) observed near Palmer Archipelago, Antarctica. Adelie and Chinstraps have similar body mass distributions, with Gentoos noticeably larger than both.
+
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_jitter(width = 0.2, alpha = 0.5, color = "navy")
+
+```
+
+## Reprex time!!
+
+create reproducible examples
+
+library(tidyverse)
+
+ggplot(data = mtcars, aes(x = mpg, y = hp)) +
+
+geom_point()
+
+copy selected code, reprex() in console, (automatically copied to clipboard), go to github repo, then issues, new issue, paste
+
+```{r}
+library(tidyverse)
+
+ggplot(data = mtcars, aes(x = mpg, y = hp)) +
+  geom_point()
+
 ```
 
 Instructions from legacy version:
