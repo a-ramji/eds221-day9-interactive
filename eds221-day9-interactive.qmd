@@ -32,12 +32,70 @@ Starting from penguins, create a new subset in which you:
 penguins_warmup <- penguins |> 
   select(species, island, sex, body_mass_g, flipper_length_mm) |> 
   filter(species %in% c("Chinstrap", "Gentoo")) |> 
+  # you could also rename in the select function
   rename(penguin_species = species) |> 
   group_by(penguin_species, sex) |> 
   summarize(mean_body_mass = mean(body_mass_g, na.rm = TRUE),
             mean_flipper_length = mean(flipper_length_mm, na.rm = TRUE),
             count = n())
+
+penguins_warmup
 ```
+
+## Across
+
+a few variations on across from dplyr
+
+Create a summary table of mean values for all numeric variables in the penguins dataset.
+
+```{r}
+# tedious way
+# penguins |> 
+#   group_by(species) |> 
+#   summarize(mean_mass = ...,
+#             mean_flipper = ....
+#             mean_bill_length = ....,
+#             etc.)
+
+# better way:
+
+penguins |> 
+  group_by(species) |> 
+  summarise(across(where(is.numeric), max, na.rm = TRUE))
+```
+
+columns where the name starts with bill, ends with mm
+
+use helper functions like starts with and ends with
+
+Calculate the mean value of all columns that start with "bill"
+
+```{r}
+penguins |> 
+  group_by(species, island) |> 
+  summarize(across(starts_with("bill"), mean, na.rm = TRUE))
+```
+
+```{r}
+
+penguins |> 
+  group_by(island, year) |> 
+  summarize(across(ends_with("mm"), min, na.rm = TRUE))
+
+
+```
+
+Find and return both the mean and standard deviation of all columns starting with "bill", grouped by penguin species, and returning a new name that combines the original column with the function
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  summarize(across(starts_with("bill"), list(mean = mean, sd = sd), na.rm = TRUE, .names = "{.col}_{.fn}"))
+```
+
+Instructions from legacy version:
+
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\--
 
 ## **1. Making a reproducible example ({reprex})**
 
@@ -64,3 +122,53 @@ See more:
 ```{r}
 
 ```
+
+## **2. A few new wrangling tools (`dplyr::across()`, `janitor::get_dupes()`)**
+
+### **janitor::get_dupes() to check for duplicates**
+
+```{r}
+
+```
+
+### **dplyr::across() - operations across columns**
+
+Mutate across multiple columns:
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+## **3. Tables with {kable} and {kableExtra}**
+
+We can produce finalized tables in R Markdown in a number of ways - see a bunch of them in David Keyes\' post [***How to make beautiful tables in R.***](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
+
+We\'ll just use one tool: `kable` + `kableExtra` to make nice html tables.
+
+Try it out of the box (knit to see the table):
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+## **4. A package for your ggplot theme**
+
+### **Creating a package**
+
+1.  In RStudio, create a new R Project that is an R Package (New Project \> New directory \> R Package). Make your package name something specific to you, e.g. `themes_yourname` (like `themes_teddy`). Make it a version controlled repo by running `usethis::use_git()` and `usethis::use_github()` (or w/ CLI).
+
+2.  Check out the existing infrastructure for your R package, which currently contains a single function hello(), which prints \"Hello, world!\" Check out the R/hello.R file to see where that function is created.
+
+3.  In the Build tab, click Install and Restart. You should see that the package is automatically attached in the Console.
+
+4.  Run the hello() function in the Console, to see that it works.
+
+5.  Create a new R **script** (.R). Copy and paste the following placeholder code into your R script. Then update the colors (in quotations) to colors that R will recognize (or hexidecimals) and change the function name to **theme_yourname** (e.g. theme_allison). You can also add other options within `theme()` to further customize your theme.
