@@ -52,3 +52,15 @@ for (i in 1:length(animals)){
   }
 }
 ```
+
+### Warmup Day 10 AM 
+
+Write a for loop where, starting with the vector c(2, 4, 6, 8, 10, 12), you add a value and the one that immediately precedes it returning a new vector with those sums
+
+```{r}
+vector_a <- c(2, 4, 6, 8, 10, 12)
+
+for (i in 2:length(vector_a)) {
+  print(vector_a[i] + vector_a[i-1])
+}
+```
