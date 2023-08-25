@@ -61,6 +61,34 @@ Write a for loop where, starting with the vector c(2, 4, 6, 8, 10, 12), you add 
 vector_a <- c(2, 4, 6, 8, 10, 12)
 
 for (i in 2:length(vector_a)) {
+ 
   print(vector_a[i] + vector_a[i-1])
 }
+```
+
+```{r}
+vector_b <- c(2, 4, 6, 8, 10, 12)
+
+storage_vec <- vector(mode = "numeric", length = (length(vector_b) - 1))
+
+for (i in 2:length(vector_a)) {
+  storage_vec[i-1] <- vector_b[i] + vector_b[i-1]
+}
+```
+
+library(help = "datasets")
+
+### ggplot() refresher
+
+```{r}
+ggplot(data = trees, aes(x = Height, y = Volume)) +
+  geom_point() +
+  theme(title = element_text(size = 18, color = "purple"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "orange"),
+        axis.title.x = element_text(color = "green"),
+        panel.grid = element_line(color = "blue"),
+        panel.grid.minor = element_line(color = "yellow")
+        )
+
 ```
