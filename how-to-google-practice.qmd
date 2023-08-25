@@ -53,7 +53,7 @@ for (i in 1:length(animals)){
 }
 ```
 
-### Warmup Day 10 AM 
+### Warmup Day 10 AM
 
 Write a for loop where, starting with the vector c(2, 4, 6, 8, 10, 12), you add a value and the one that immediately precedes it returning a new vector with those sums
 
@@ -90,5 +90,16 @@ ggplot(data = trees, aes(x = Height, y = Volume)) +
         panel.grid = element_line(color = "blue"),
         panel.grid.minor = element_line(color = "yellow")
         )
+
+```
+
+```{r}
+library(tidyverse)
+library(themeAnna)
+
+
+ggplot(data = mtcars, aes(x = hp, y = mpg)) +
+  geom_point() +
+  theme_food()
 
 ```
